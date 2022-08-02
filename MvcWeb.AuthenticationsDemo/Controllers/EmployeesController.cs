@@ -12,7 +12,7 @@ namespace MvcWeb.AuthenticationsDemo.Controllers
 {
     [Authorize]
     public class EmployeesController : Controller
-    {
+    { 
         private EmployeeEntities db = new EmployeeEntities();
 
         // GET: Employees
@@ -22,6 +22,7 @@ namespace MvcWeb.AuthenticationsDemo.Controllers
         }
 
         // GET: Employees/Details/5 
+        [Authorize(Roles = "Admin,User")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -37,6 +38,8 @@ namespace MvcWeb.AuthenticationsDemo.Controllers
         }
 
         // GET: Employees/Create
+
+        [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
             return View();
@@ -47,6 +50,7 @@ namespace MvcWeb.AuthenticationsDemo.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public ActionResult Create([Bind(Include = "EmployeeID,Name,Gender,City,DeptId")] tblEmployee tblEmployee)
         {
             if (ModelState.IsValid)
@@ -60,6 +64,7 @@ namespace MvcWeb.AuthenticationsDemo.Controllers
         }
 
         // GET: Employees/Edit/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -79,6 +84,7 @@ namespace MvcWeb.AuthenticationsDemo.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit([Bind(Include = "EmployeeID,Name,Gender,City,DeptId")] tblEmployee tblEmployee)
         {
             if (ModelState.IsValid)
@@ -91,6 +97,7 @@ namespace MvcWeb.AuthenticationsDemo.Controllers
         }
 
         // GET: Employees/Delete/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -106,6 +113,7 @@ namespace MvcWeb.AuthenticationsDemo.Controllers
         }
 
         // POST: Employees/Delete/5
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
@@ -123,6 +131,12 @@ namespace MvcWeb.AuthenticationsDemo.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        [AllowAnonymous]
+        public ActionResult About()
+        {
+            return View();
         }
     }
 }

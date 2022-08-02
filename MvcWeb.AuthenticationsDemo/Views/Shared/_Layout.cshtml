@@ -27,6 +27,9 @@
                     <li>
                         @Html.ActionLink("Create", "Create", "Employees")
                     </li>
+                    <li>
+                        @Html.ActionLink("About", "About", "Employees")
+                    </li>
                     @if (User.Identity.IsAuthenticated)
                     {
                         <li><a> Dear - @User.Identity.Name</a></li>

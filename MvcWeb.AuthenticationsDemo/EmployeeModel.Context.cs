@@ -28,7 +28,6 @@ namespace MvcWeb.AuthenticationsDemo
         public virtual DbSet<tblDepartment> tblDepartment { get; set; }
         public virtual DbSet<tblEmployee> tblEmployee { get; set; }
         public virtual DbSet<tblUsers> tblUsers { get; set; }
-
-        public System.Data.Entity.DbSet<MvcWeb.AuthenticationsDemo.Models.Membership> Memberships { get; set; }
+        public virtual DbSet<tblRoles> tblRoles { get; set; }
     }
 }

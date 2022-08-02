@@ -22,6 +22,18 @@
           <Property Name="City" Type="varchar" MaxLength="255" />
           <Property Name="DeptId" Type="int" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'Employee.dbo.tblRoles' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="tblRoles">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="Role" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="Role" Type="nvarchar" MaxLength="20" Nullable="false" />
+        </EntityType>
         <EntityType Name="tblUsers">
           <Key>
             <PropertyRef Name="Id" />
@@ -30,10 +42,33 @@
           <Property Name="Username" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <Association Name="FK_tblRoles_tblUsers">
+          <End Role="tblUsers" Type="Self.tblUsers" Multiplicity="1" />
+          <End Role="tblRoles" Type="Self.tblRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tblRoles">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="EmployeeModelStoreContainer">
           <EntitySet Name="tblDepartment" EntityType="Self.tblDepartment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblEmployee" EntityType="Self.tblEmployee" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblUsers" EntityType="Self.tblUsers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblRoles" EntityType="Self.tblRoles" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [tblRoles].[Id] AS [Id], 
+    [tblRoles].[UserId] AS [UserId], 
+    [tblRoles].[Role] AS [Role]
+    FROM [dbo].[tblRoles] AS [tblRoles]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_tblRoles_tblUsers" Association="Self.FK_tblRoles_tblUsers">
+            <End Role="tblUsers" EntitySet="tblUsers" />
+            <End Role="tblRoles" EntitySet="tblRoles" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -60,6 +95,11 @@
           <EntitySet Name="tblDepartment" EntityType="Self.tblDepartment" />
           <EntitySet Name="tblEmployee" EntityType="Self.tblEmployee" />
           <EntitySet Name="tblUsers" EntityType="EmployeeModel.tblUsers" />
+          <EntitySet Name="tblRoles" EntityType="EmployeeModel.tblRoles" />
+          <AssociationSet Name="FK_tblRoles_tblUsers" Association="EmployeeModel.FK_tblRoles_tblUsers">
+            <End Role="tblUsers" EntitySet="tblUsers" />
+            <End Role="tblRoles" EntitySet="tblRoles" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="tblUsers">
           <Key>
@@ -68,7 +108,31 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Username" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Password" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tblRoles" Relationship="EmployeeModel.FK_tblRoles_tblUsers" FromRole="tblUsers" ToRole="tblRoles" />
         </EntityType>
+        <EntityType Name="tblRoles">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="Role" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="Role" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tblUsers" Relationship="EmployeeModel.FK_tblRoles_tblUsers" FromRole="tblRoles" ToRole="tblUsers" />
+        </EntityType>
+        <Association Name="FK_tblRoles_tblUsers">
+          <End Type="EmployeeModel.tblUsers" Role="tblUsers" Multiplicity="1" />
+          <End Type="EmployeeModel.tblRoles" Role="tblRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tblRoles">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -99,6 +163,15 @@
               <MappingFragment StoreEntitySet="tblUsers">
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblRoles">
+            <EntityTypeMapping TypeName="EmployeeModel.tblRoles">
+              <MappingFragment StoreEntitySet="tblRoles">
+                <ScalarProperty Name="Role" ColumnName="Role" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

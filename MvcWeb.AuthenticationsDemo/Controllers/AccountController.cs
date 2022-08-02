@@ -8,6 +8,7 @@ using System.Web.Security;
 
 namespace MvcWeb.AuthenticationsDemo.Controllers
 {
+    [AllowAnonymous]
     public class AccountController : Controller
     {
         // GET: Account
